@@ -21,8 +21,13 @@ import {
   FormControlLabel,
   FormControl,
   FormLabel,
+  Dialog,
+  DialogContent,
+  DialogActions,
 } from "@material-ui/core";
 import { pxToCm } from "../../../libs/utils";
+import RedTape from "../../templates/RedTape";
+import Denim from "../../templates/Denim";
 
 const colors = [
   { value: "#000000", label: "Black" },
@@ -73,13 +78,32 @@ function LabelCreator() {
   });
 
   //This handler is used for textFields
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState("template1");
+
   const handleClick = (selection) => (event) => {
     setAnchorEl((anchorEl) => ({
       ...anchorEl,
       [selection]: event.currentTarget,
     }));
+
+    if (selection === "settings") {
+      setIsOpen(true);
+    }
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  const handleTemplateSelect = (template) => {
+    setSelectedTemplate(template);
+  };
+
+  const handleSave = () => {
+    console.log("Selected Template:", selectedTemplate);
+    setIsOpen(false);
+  };
   const handleClickMenuItem = (selection, option) => {
     setSettings((settings) => ({ ...settings, [selection]: option.value }));
     setAnchorEl((anchorEl) => ({ ...anchorEl, [selection]: null }));
@@ -244,6 +268,77 @@ function LabelCreator() {
                           <SettingsIcon />
                         </ToggleButton>
                       </ToggleButtonGroup>
+                      <Dialog
+                        open={isOpen}
+                        onClose={handleClose}
+                        fullWidth={true}
+                        maxWidth={"md"}
+                      >
+                        <DialogContent>
+                          <Grid container spacing={2}>
+                            <Grid
+                              item
+                              xs={6}
+                              style={{
+                                opacity:
+                                  selectedTemplate === "template1" ? 1 : 0.5,
+                                cursor: "pointer",
+                                display:"flex",
+                                justifyContent:"center",
+                                alignItems:"center"
+                              }}
+                              onClick={() => handleTemplateSelect("template1")}
+                            >
+                              {/* Dummy HTML content for Template 1 */}
+                              <div
+                                style={{
+                                  // border: "1px solid",
+                                  padding: "20px",
+                                }}
+                              >
+                                <Denim />
+                              </div>
+                            </Grid>
+                            <Grid
+                              item
+                              xs={6}
+                              style={{
+                                opacity:
+                                  selectedTemplate === "template2" ? 1 : 0.5,
+                                cursor: "pointer",
+                                display:"flex",
+                                justifyContent:"center",
+                                alignItems:"center"
+                              }}
+                              onClick={() => handleTemplateSelect("template2")}
+                            >
+                              {/* Dummy HTML content for Template 2 */}
+                              <div
+                                style={{
+                                  // border: "1px solid",
+                                  padding: "20px",
+                           
+                                }}
+                              >
+                                <RedTape />
+                              </div>
+                            </Grid>
+                          </Grid>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleClose} color="primary">
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={handleSave}
+                            color="primary"
+                            disabled={!selectedTemplate}
+                          >
+                            Save
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+
                       {/* Barcode color button and menu */}
                       <ToggleButtonGroup>
                         <ToggleButton
@@ -341,7 +436,7 @@ function LabelCreator() {
           </Paper>
         </Grid>
         <Grid item>
-          <div className="App">
+          {selectedTemplate=="template1"?(<div className="App">
             <div ref={wrapper_ref}>
               {products.map((product, index) => (
                 <div
@@ -363,7 +458,7 @@ function LabelCreator() {
                   <span
                     style={{
                       fontWeight: "bolder",
-                      fontSize: `${fontSize+2}px`,
+                      fontSize: `${fontSize + 2}px`,
                     }}
                   >
                     {product.Brand}
@@ -389,18 +484,68 @@ function LabelCreator() {
                 </div>
               ))}
             </div>
+          </div>):(
+            <div className="App">
+            <div ref={wrapper_ref}>
+              {products.map((product, index) => (
+                <div
+                  key={index}
+                  style={{
+                    maxWidth: `${dimensions.width}px`,
+                    maxHeight: `${dimensions.height}px`,
+                    border: "1px solid #000",
+                    padding: 4,
+                    boxSizing: "border-box",
+                    marginBottom: "10px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "1px",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "bolder",
+                      fontSize: `${fontSize + 2}px`,
+                    }}
+                  >
+                    {product.Brand}
+                  </span>     
+                  <div
+                    style={{
+                      fontSize: `${fontSize}px`,
+                      lineHeight: "1",
+                      maxWidth: `${dimensions.width - 10}px`,
+                      maxHeight: `${dimensions.height - 10}px`,
+                    }}
+                  >
+                    {product.details
+                      .filter((x) => x.label.trim() !== "Quantity") // Exclude Quantity
+                      .map((item, detailIndex) => (
+                        <p key={detailIndex}>
+                          <strong>{item.label}</strong>: {item.value}
+                        </p>
+                      ))}
+                  </div>
+                  <Divider />
+                  <Barcode {...settings} />
+                </div>
+              ))}
+            </div>
           </div>
+          )}
         </Grid>
         <Grid item>
-          <div >
+          <div>
             {products.map((product, index) => (
               <div>
                 {product.details
                   .filter((x) => x.label.trim() == "Quantity") // Exclude Quantity
                   .map((item, detailIndex) => (
-                    <p key={detailIndex}
-                    style={
-                      {
+                    <p
+                      key={detailIndex}
+                      style={{
                         // fontSize: `${fontSize}px`,
                         // lineHeight: "1",
                         maxWidth: `${dimensions.width}px`,
@@ -408,8 +553,7 @@ function LabelCreator() {
                         minHeight: `${dimensions.height}px`,
                         maxHeight: `${dimensions.height}px`,
                         // backgroundColor:"#891"
-                      }
-                    }
+                      }}
                     >
                       <strong>{item.label}</strong>: {item.value}
                     </p>
