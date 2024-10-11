@@ -14,7 +14,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import html2canvas from "html2canvas";
 import Papa from "papaparse";
 import "./label-creator.styles.css";
-import { CloudUpload } from "@material-ui/icons";
+import { CloudDownload, CloudUpload } from "@material-ui/icons";
 import {
   Radio,
   RadioGroup,
@@ -283,9 +283,9 @@ function LabelCreator() {
                                 opacity:
                                   selectedTemplate === "template1" ? 1 : 0.5,
                                 cursor: "pointer",
-                                display:"flex",
-                                justifyContent:"center",
-                                alignItems:"center"
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                               }}
                               onClick={() => handleTemplateSelect("template1")}
                             >
@@ -306,9 +306,9 @@ function LabelCreator() {
                                 opacity:
                                   selectedTemplate === "template2" ? 1 : 0.5,
                                 cursor: "pointer",
-                                display:"flex",
-                                justifyContent:"center",
-                                alignItems:"center"
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                               }}
                               onClick={() => handleTemplateSelect("template2")}
                             >
@@ -317,7 +317,6 @@ function LabelCreator() {
                                 style={{
                                   // border: "1px solid",
                                   padding: "20px",
-                           
                                 }}
                               >
                                 <RedTape />
@@ -431,109 +430,125 @@ function LabelCreator() {
                 <Button onClick={onClick} variant="contained" color="primary">
                   Print Barcode
                 </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<CloudDownload/>}
+                  component="a"
+                  href="/sample.csv"
+                  download
+                  style={{
+                    textDecoration: "none",
+                    color: "white",
+                  }}
+                >
+                  Download Sample CSV
+                </Button>
               </Grid>
             </Grid>
           </Paper>
         </Grid>
         <Grid item>
-          {selectedTemplate=="template1"?(<div className="App">
-            <div ref={wrapper_ref}>
-              {products.map((product, index) => (
-                <div
-                  key={index}
-                  style={{
-                    maxWidth: `${dimensions.width}px`,
-                    maxHeight: `${dimensions.height}px`,
-                    border: "1px solid #000",
-                    padding: 4,
-                    boxSizing: "border-box",
-                    marginBottom: "10px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "1px",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontWeight: "bolder",
-                      fontSize: `${fontSize + 2}px`,
-                    }}
-                  >
-                    {product.Brand}
-                  </span>
-                  <Divider />
-                  <Barcode {...settings} />
-                  <div
-                    style={{
-                      fontSize: `${fontSize}px`,
-                      lineHeight: "1",
-                      maxWidth: `${dimensions.width - 10}px`,
-                      maxHeight: `${dimensions.height - 10}px`,
-                    }}
-                  >
-                    {product.details
-                      .filter((x) => x.label.trim() !== "Quantity") // Exclude Quantity
-                      .map((item, detailIndex) => (
-                        <p key={detailIndex}>
-                          <strong>{item.label}</strong>: {item.value}
-                        </p>
-                      ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>):(
+          {selectedTemplate == "template1" ? (
             <div className="App">
-            <div ref={wrapper_ref}>
-              {products.map((product, index) => (
-                <div
-                  key={index}
-                  style={{
-                    maxWidth: `${dimensions.width}px`,
-                    maxHeight: `${dimensions.height}px`,
-                    border: "1px solid #000",
-                    padding: 4,
-                    boxSizing: "border-box",
-                    marginBottom: "10px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "1px",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontWeight: "bolder",
-                      fontSize: `${fontSize + 2}px`,
-                    }}
-                  >
-                    {product.Brand}
-                  </span>     
+              <div ref={wrapper_ref}>
+                {products.map((product, index) => (
                   <div
+                    key={index}
                     style={{
-                      fontSize: `${fontSize}px`,
-                      lineHeight: "1",
-                      maxWidth: `${dimensions.width - 10}px`,
-                      maxHeight: `${dimensions.height - 10}px`,
+                      maxWidth: `${dimensions.width}px`,
+                      maxHeight: `${dimensions.height}px`,
+                      border: "1px solid #000",
+                      padding: 4,
+                      boxSizing: "border-box",
+                      marginBottom: "10px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "1px",
                     }}
                   >
-                    {product.details
-                      .filter((x) => x.label.trim() !== "Quantity") // Exclude Quantity
-                      .map((item, detailIndex) => (
-                        <p key={detailIndex}>
-                          <strong>{item.label}</strong>: {item.value}
-                        </p>
-                      ))}
+                    <span
+                      style={{
+                        fontWeight: "bolder",
+                        fontSize: `${fontSize + 2}px`,
+                      }}
+                    >
+                      {product.Brand}
+                    </span>
+                    <Divider />
+                    <Barcode {...settings} />
+                    <div
+                      style={{
+                        fontSize: `${fontSize}px`,
+                        lineHeight: "1",
+                        maxWidth: `${dimensions.width - 10}px`,
+                        maxHeight: `${dimensions.height - 10}px`,
+                      }}
+                    >
+                      {product.details
+                        .filter((x) => x.label.trim() !== "Quantity") // Exclude Quantity
+                        .map((item, detailIndex) => (
+                          <p key={detailIndex}>
+                            <strong>{item.label}</strong>: {item.value}
+                          </p>
+                        ))}
+                    </div>
                   </div>
-                  <Divider />
-                  <Barcode {...settings} />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="App">
+              <div ref={wrapper_ref}>
+                {products.map((product, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      maxWidth: `${dimensions.width}px`,
+                      maxHeight: `${dimensions.height}px`,
+                      border: "1px solid #000",
+                      padding: 4,
+                      boxSizing: "border-box",
+                      marginBottom: "10px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "1px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontWeight: "bolder",
+                        fontSize: `${fontSize + 2}px`,
+                      }}
+                    >
+                      {product.Brand}
+                    </span>
+                    <div
+                      style={{
+                        fontSize: `${fontSize}px`,
+                        lineHeight: "1",
+                        maxWidth: `${dimensions.width - 10}px`,
+                        maxHeight: `${dimensions.height - 10}px`,
+                      }}
+                    >
+                      {product.details
+                        .filter((x) => x.label.trim() !== "Quantity") // Exclude Quantity
+                        .map((item, detailIndex) => (
+                          <p key={detailIndex}>
+                            <strong>{item.label}</strong>: {item.value}
+                          </p>
+                        ))}
+                    </div>
+                    <Divider />
+                    <Barcode {...settings} />
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </Grid>
         <Grid item>
