@@ -14,7 +14,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import html2canvas from "html2canvas";
 import Papa from "papaparse";
 import "./label-creator.styles.css";
-import { CloudDownload, CloudUpload } from "@material-ui/icons";
+import { CloudDownload, CloudUpload, Print } from "@material-ui/icons";
 import {
   Radio,
   RadioGroup,
@@ -427,13 +427,18 @@ function LabelCreator() {
                     Upload CSV
                   </Button>
                 </label>
-                <Button onClick={onClick} variant="contained" color="primary">
+                <Button
+                  onClick={onClick}
+                  variant="contained"
+                  color="primary"
+                  startIcon={<Print />}
+                >
                   Print Barcode
                 </Button>
                 <Button
                   variant="contained"
                   color="secondary"
-                  startIcon={<CloudDownload/>}
+                  startIcon={<CloudDownload />}
                   component="a"
                   href="/sample.csv"
                   download
